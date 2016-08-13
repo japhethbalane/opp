@@ -4,7 +4,7 @@ var canvas = document.getElementById('opps');
 var context = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-var opp = new OPP(5,5,60);
+var opp = new OPP(3,3,100);
 var isPlaying = false;
 var isGameover = false;
 var gameScore = 0;
@@ -91,8 +91,8 @@ function OPP(w,h,dim) {
 	this.bar = new Bar(this.x,this.y,this.w,this.h,this.gap,this.dim);
 	this.score = 0;
 	this.highscore = 0;
-	// this.mode = "Classic - Block";
-	this.mode = "Classic - Irregular";
+	this.mode = "Classic - Block";
+	// this.mode = "Classic - Irregular";
 
 	this.gameOver = function() {
 		isPlaying = false; isGameover = true;
