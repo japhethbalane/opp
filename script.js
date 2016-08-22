@@ -212,7 +212,11 @@ function Bar(x,y,w,h,g,d) {
 	}
 	this.resetTime = function() {
 		this.time = this.maxTime;
+<<<<<<< HEAD
 		this.timeMinus = this.defMinus;
+=======
+		this.timeMinus = defMinus;
+>>>>>>> 286b2a3ea3d9286439d7b7e79f58399b94a0307a
 	}
 	this.update = function() {
 		if (this.time > 0) this.time-=this.timeMinus;
