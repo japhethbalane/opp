@@ -9,9 +9,13 @@ var isPlaying = false;
 var isGameover = false;
 var gameScore = 0;
 
+var stars = [];
+
 //////////////////////////////////////////////////////////////////////////////
 
 setInterval(world,30);
+
+generateStars(500);
 
 //////////////////////////////////////////////////////////////////////////////
 
@@ -43,14 +47,22 @@ window.addEventListener("click",function(e){
 
 //////////////////////////////////////////////////////////////////////////////
 
+function generateStars(count) {
+	for (var i = 0; i < count; i++) {
+		stars.push(new Star());
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
 function drawIntro() {
-	context.fillStyle = "#000";
+	context.fillStyle = "#fff";
 	context.font = "30px Arial";
 	context.fillText("oPp",canvas.width/2,canvas.height/2);
 }
 
 function clearCanvas() {
-	context.fillStyle = "#fff";
+	context.fillStyle = "#000";
 	context.fillRect(0,0,canvas.width,canvas.height);
 }
 
@@ -65,12 +77,15 @@ function world() {
 	if (!isPlaying) {
 		drawIntro();
 		if (isGameover) {
-			alert("Sorry, your Game is Over!" + " Your score is " + gameScore);
+			// alert("Sorry, your Game is Over!" + " Your score is " + gameScore);
 			isGameover = false; gameScore = 0;
 		}
 	}
 	if (isPlaying) {
 		opp.update().draw();
+	}
+	for (var i = 0; i < stars.length; i++) {
+		stars[i].update().draw();
 	}
 }
 
@@ -78,8 +93,6 @@ function world() {
 
 
 //////////////////////////////////////////////////////////////////////////////
-
-
 
 function OPP(w,h,dim) {
 	this.w = w;	this.h = h;
@@ -143,7 +156,7 @@ function OPP(w,h,dim) {
 			(this.squares)[i].draw();
 		}
 		(this.bar).draw();
-		context.fillStyle = "#000"; context.font = "20px Arial";
+		context.fillStyle = "#fff"; context.font = "20px Arial";
 		context.fillText(this.score,this.x,this.y-10);
 		context.fillText(this.highscore,
 			this.x+(this.w*(this.gap+this.dim)-context.measureText(this.highscore).width),
@@ -184,8 +197,8 @@ function Square(x,y,dim) {
 		}
 	}
 	this.draw = function() {
-		context.strokeStyle = "#000";
-		context.fillStyle = "#000";
+		context.strokeStyle = "#fff";
+		context.fillStyle = "#fff";
 		if (this.isShown) {
 			context.strokeRect(this.x,this.y,this.dim,this.dim);
 			context.fillRect(this.fillx,this.filly,this.fillDim,this.fillDim);
@@ -222,10 +235,50 @@ function Bar(x,y,w,h,g,d) {
 		return this;
 	}
 	this.draw = function() {
-		context.strokeStyle = "#000";
-		context.fillStyle = "#000";
+		context.strokeStyle = "#fff";
+		context.fillStyle = "#fff";
 		context.strokeRect(this.x,this.y,this.w,this.h);
 		context.fillRect(this.x,this.y,this.time,this.h);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////////
+
+function Star() {
+	this.x = randomBetween(0,canvas.width);
+	this.y = randomBetween(0,canvas.height);
+	this.angle = Math.atan2(this.y-canvas.height/2,this.x-canvas.width/2) * 180 / Math.PI;
+
+	this.reposition = function() {
+		this.x = randomBetween(0,canvas.width);
+		this.y = randomBetween(0,canvas.height);
+		this.angle = Math.atan2(this.y-canvas.height/2,this.x-canvas.width/2) * 180 / Math.PI;
+		// this.x = canvas.width/2;
+		// this.y = canvas.height/2;
+		// this.angle = randomBetween(0,360);
+	}
+
+	this.control = function() {
+		if (this.x < 0) 			this.reposition();
+		if (this.x > canvas.width) 	this.reposition()
+		if (this.y < 0) 			this.reposition();
+		if (this.y > canvas.height) this.reposition()
+	}
+
+	this.update = function() {
+		var dx = Math.cos(this.angle*(Math.PI/180));
+		var dy = Math.sin(this.angle*(Math.PI/180));
+		this.x+=dx;
+		this.y+=dy;
+		this.control();
+		return this;
+	}
+
+	this.draw = function() {
+		context.fillStyle = "#fff";
+		context.beginPath();
+		context.arc(this.x,this.y,1,Math.PI*2,false);
+		context.fill();
 	}
 }
 
